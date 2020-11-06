@@ -15,47 +15,54 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.tutorial.crm.backend.entity.Company;
-import com.vaadin.tutorial.crm.backend.entity.Contact;
+import com.vaadin.tutorial.crm.backend.entity.Department;
+import com.vaadin.tutorial.crm.backend.entity.Employee;
+import com.vaadin.tutorial.crm.backend.enums.Role;
+import com.vaadin.tutorial.crm.backend.enums.Status;
 
 import java.util.List;
 
 public class ContactForm extends FormLayout {
 
+    TextField username = new TextField("Username");
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
     EmailField email = new EmailField("Email");
-    ComboBox<Contact.Status> status = new ComboBox<>("Status");
-    ComboBox<Company> company = new ComboBox<>("Company");
+    ComboBox<Status> status = new ComboBox<>("Status");
+    ComboBox<Role> role = new ComboBox<>("Role");
+    ComboBox<Department> department = new ComboBox<>("Department");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    Binder<Contact> binder = new BeanValidationBinder<>(Contact.class);
-    private Contact contact;
+    Binder<Employee> binder = new BeanValidationBinder<>(Employee.class);
+    private Employee employee;
 
-    public ContactForm(List<Company> companies) {
+    public ContactForm(List<Department> departments) {
         addClassName("contact-form");
 
         binder.bindInstanceFields(this);
-        status.setItems(Contact.Status.values());
-        company.setItems(companies);
-        company.setItemLabelGenerator(Company::getName);
+        status.setItems(Status.values());
+        role.setItems(Role.values());
+        department.setItems(departments);
+        department.setItemLabelGenerator(Department::getName);
 
         add(
+                username,
                 firstName,
                 lastName,
                 email,
                 status,
-                company,
+                role,
+                department,
                 createButtonsLayout()
         );
     }
 
-    public void setContact(Contact contact) {
-        this.contact = contact;
-        binder.readBean(contact);
+    public void setContact(Employee employee) {
+        this.employee = employee;
+        binder.readBean(employee);
     }
 
     private Component createButtonsLayout() {
@@ -67,7 +74,7 @@ public class ContactForm extends FormLayout {
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(click -> validateAndSave());
-        delete.addClickListener(click -> fireEvent(new DeleteEvent(this, contact)));
+        delete.addClickListener(click -> fireEvent(new DeleteEvent(this, employee)));
         close.addClickListener(click -> fireEvent(new CloseEvent(this)));
 
         binder.addStatusChangeListener(evt -> save.setEnabled(binder.isValid()));
@@ -78,8 +85,8 @@ public class ContactForm extends FormLayout {
     private void validateAndSave() {
 
         try {
-            binder.writeBean(contact);
-            fireEvent(new SaveEvent(this, contact));
+            binder.writeBean(employee);
+            fireEvent(new SaveEvent(this, employee));
         } catch (ValidationException e) {
             e.printStackTrace();
         }
@@ -87,27 +94,27 @@ public class ContactForm extends FormLayout {
 
     // Events
     public static abstract class ContactFormEvent extends ComponentEvent<ContactForm> {
-        private Contact contact;
+        private Employee employee;
 
-        protected ContactFormEvent(ContactForm source, Contact contact) {
+        protected ContactFormEvent(ContactForm source, Employee employee) {
             super(source, false);
-            this.contact = contact;
+            this.employee = employee;
         }
 
-        public Contact getContact() {
-            return contact;
+        public Employee getContact() {
+            return employee;
         }
     }
 
     public static class SaveEvent extends ContactFormEvent {
-        SaveEvent(ContactForm source, Contact contact) {
-            super(source, contact);
+        SaveEvent(ContactForm source, Employee employee) {
+            super(source, employee);
         }
     }
 
     public static class DeleteEvent extends ContactFormEvent {
-        DeleteEvent(ContactForm source, Contact contact) {
-            super(source, contact);
+        DeleteEvent(ContactForm source, Employee employee) {
+            super(source, employee);
         }
 
     }
