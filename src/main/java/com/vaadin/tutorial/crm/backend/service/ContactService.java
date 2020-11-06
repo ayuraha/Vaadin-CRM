@@ -1,7 +1,9 @@
 package com.vaadin.tutorial.crm.backend.service;
 
-import com.vaadin.tutorial.crm.backend.entity.Company;
-import com.vaadin.tutorial.crm.backend.entity.Contact;
+import com.vaadin.tutorial.crm.backend.entity.Employee;
+import com.vaadin.tutorial.crm.backend.entity.Department;
+import com.vaadin.tutorial.crm.backend.enums.Role;
+import com.vaadin.tutorial.crm.backend.enums.Status;
 import com.vaadin.tutorial.crm.backend.repository.CompanyRepository;
 import com.vaadin.tutorial.crm.backend.repository.ContactRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class ContactService {
         this.companyRepository = companyRepository;
     }
 
-    public List<Contact> findAll() {
+    public List<Employee> findAll() {
         return contactRepository.findAll();
     }
 
@@ -34,20 +36,20 @@ public class ContactService {
         return contactRepository.count();
     }
 
-    public void delete(Contact contact) {
-        contactRepository.delete(contact);
+    public void delete(Employee employee) {
+        contactRepository.delete(employee);
     }
 
-    public void save(Contact contact) {
-        if (contact == null) {
+    public void save(Employee employee) {
+        if (employee == null) {
             LOGGER.log(Level.SEVERE,
                     "Contact is null. Are you sure you have connected your form to the application?");
             return;
         }
-        contactRepository.save(contact);
+        contactRepository.save(employee);
     }
 
-    public List<Contact> findAll(String stringFilter) {
+    public List<Employee> findAll(String stringFilter) {
         if (stringFilter == null || stringFilter.isEmpty()) {
             return contactRepository.findAll();
         } else {
@@ -60,31 +62,33 @@ public class ContactService {
         if (companyRepository.count() == 0) {
             companyRepository.saveAll(
                     Stream.of("Path-Way Electronics", "E-Tech Management", "Path-E-Tech Management")
-                            .map(Company::new)
+                            .map(Department::new)
                             .collect(Collectors.toList()));
         }
 
         if (contactRepository.count() == 0) {
             Random r = new Random(0);
-            List<Company> companies = companyRepository.findAll();
+            List<Department> companies = companyRepository.findAll();
             contactRepository.saveAll(
-                    Stream.of("Gabrielle Patel", "Brian Robinson", "Eduardo Haugen",
-                            "Koen Johansen", "Alejandro Macdonald", "Angel Karlsson", "Yahir Gustavsson", "Haiden Svensson",
-                            "Emily Stewart", "Corinne Davis", "Ryann Davis", "Yurem Jackson", "Kelly Gustavsson",
-                            "Eileen Walker", "Katelyn Martin", "Israel Carlsson", "Quinn Hansson", "Makena Smith",
-                            "Danielle Watson", "Leland Harris", "Gunner Karlsen", "Jamar Olsson", "Lara Martin",
-                            "Ann Andersson", "Remington Andersson", "Rene Carlsson", "Elvis Olsen", "Solomon Olsen",
-                            "Jaydan Jackson", "Bernard Nilsen")
+                    Stream.of("Gabrielle Gabrielle Patel", "Brian Brian Robinson", "Eduardo Eduardo Haugen",
+                            "Koen Koen Johansen", "Alejandro Alejandro Macdonald", "Angel Angel Karlsson", "Yahir Yahir Gustavsson", "Haiden Haiden Svensson",
+                            "Emily Emily Stewart", "Corinne Corinne Davis", "Ryann Ryann Davis", "Yurem Yurem Jackson", "Kelly Kelly Gustavsson",
+                            "Eileen Eileen Walker", "Katelyn Katelyn Martin", "Israel Israel Carlsson", "Quinn Quinn Hansson", "Makena Makena Smith",
+                            "Danielle Danielle Watson", "Leland Leland Harris", "Gunner Gunner Karlsen", "Jamar Jamar Olsson", "Lara Lara Martin",
+                            "Ann Ann Andersson", "Remington Remington Andersson", "Rene Rene Carlsson", "Elvis Elvis Olsen", "Solomon Solomon Olsen",
+                            "Jaydan Jaydan Jackson", "Bernard Bernard Nilsen")
                             .map(name -> {
                                 String[] split = name.split(" ");
-                                Contact contact = new Contact();
-                                contact.setFirstName(split[0]);
-                                contact.setLastName(split[1]);
-                                contact.setCompany(companies.get(r.nextInt(companies.size())));
-                                contact.setStatus(Contact.Status.values()[r.nextInt(Contact.Status.values().length)]);
-                                String email = (contact.getFirstName() + "." + contact.getLastName() + "@" + contact.getCompany().getName().replaceAll("[\\s-]", "") + ".com").toLowerCase();
-                                contact.setEmail(email);
-                                return contact;
+                                Employee employee = new Employee();
+                                employee.setUsername(split[0]);
+                                employee.setFirstName(split[1]);
+                                employee.setLastName(split[2]);
+                                employee.setDepartment(companies.get(r.nextInt(companies.size())));
+                                employee.setStatus(Status.values()[r.nextInt(Status.values().length)]);
+                                employee.setRole(Role.Employee);
+                                String email = (employee.getFirstName() + "." + employee.getLastName() + "@" + employee.getDepartment().getName().replaceAll("[\\s-]", "") + ".com").toLowerCase();
+                                employee.setEmail(email);
+                                return employee;
                             }).collect(Collectors.toList()));
         }
     }

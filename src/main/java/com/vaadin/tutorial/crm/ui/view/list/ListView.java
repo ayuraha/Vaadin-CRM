@@ -9,8 +9,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.tutorial.crm.backend.entity.Company;
-import com.vaadin.tutorial.crm.backend.entity.Contact;
+import com.vaadin.tutorial.crm.backend.entity.Department;
+import com.vaadin.tutorial.crm.backend.entity.Employee;
 import com.vaadin.tutorial.crm.backend.service.CompanyService;
 import com.vaadin.tutorial.crm.backend.service.ContactService;
 import com.vaadin.tutorial.crm.ui.MainLayout;
@@ -20,7 +20,7 @@ import com.vaadin.tutorial.crm.ui.MainLayout;
 public class ListView extends VerticalLayout {
 
     private final ContactForm form;
-    Grid<Contact> grid = new Grid<>(Contact.class);
+    Grid<Employee> grid = new Grid<>(Employee.class);
     TextField filterText = new TextField();
 
     private ContactService contactService;
@@ -65,23 +65,23 @@ public class ListView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassName("contact-grid");
         grid.setSizeFull();
-        grid.removeColumnByKey("company");
-        grid.setColumns("firstName", "lastName", "email", "status");
+        grid.removeColumnByKey("department");
+        grid.setColumns("username", "firstName", "lastName", "email", "status");
         grid.addColumn(contact -> {
-            Company company = contact.getCompany();
-            return company == null ? "-" : company.getName();
-        }).setHeader("Company");
+            Department department = contact.getDepartment();
+            return department == null ? "-" : department.getName();
+        }).setHeader("Department");
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event -> editContact(event.getValue())) ;
     }
 
-    public void editContact(Contact contact) {
-        if (contact == null) {
+    public void editContact(Employee employee) {
+        if (employee == null) {
             closeEditor();
         } else {
-            form.setContact(contact);
+            form.setContact(employee);
             form.setVisible(true);
             addClassName("editing");
         }
@@ -107,7 +107,7 @@ public class ListView extends VerticalLayout {
 
     void addContact() {
         grid.asSingleSelect().clear();
-        editContact(new Contact());
+        editContact(new Employee());
     }
 
     private void closeEditor() {
