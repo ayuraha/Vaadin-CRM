@@ -17,7 +17,7 @@ public class StoryService {
 
     private final StoryRepository storyRepository;
 
-    public List<Story> getAll() {
+    public List<Story> findAll() {
         return storyRepository.findAll();
     }
 
