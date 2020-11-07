@@ -7,6 +7,14 @@
   flex: 2;
 }
 
+.story-view .content {
+  display: flex;
+}
+
+.story-view .story-grid {
+  flex: 2;
+}
+
 .list-view .contact-form {
   flex: 1;
   padding: var(--lumo-space-m);

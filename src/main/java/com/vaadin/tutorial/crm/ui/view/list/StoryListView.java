@@ -1,5 +1,6 @@
 package com.vaadin.tutorial.crm.ui.view.list;
 
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -24,18 +25,17 @@ public class StoryListView extends VerticalLayout {
     public StoryListView(StoryService storyService) {
         this.storyService = storyService;
 
-        addClassName("list-view");
+        addClassName("story-view");
         setSizeFull();
-
         configureGrid();
 
         add(storyGrid);
 
-
+        updateList();
     }
 
     private void configureGrid() {
-        storyGrid.addClassName("contact-grid");
+        storyGrid.addClassName("story-grid");
         storyGrid.setSizeFull();
         storyGrid.removeAllColumns();
         createColums();
@@ -43,9 +43,16 @@ public class StoryListView extends VerticalLayout {
     }
 
     private void createColums() {
-        storyGrid.addColumn(story -> OPEN.equals(story.getStage()) ? story.getTitle() : MINUS).setHeader("Open");
-        storyGrid.addColumn(story -> TODO.equals(story.getStage()) ? story.getTitle() : MINUS).setHeader("TODO");
-        storyGrid.addColumn(story -> IN_PROGRESS.equals(story.getStage()) ? story.getTitle() : MINUS).setHeader("In Progress");
-        storyGrid.addColumn(story -> DONE.equals(story.getStage()) ? story.getTitle() : MINUS).setHeader("Done");
+//        ProgressBar progressBar = new ProgressBar();
+//        progressBar.setValue(0.345);
+        storyGrid.addColumn(story -> OPEN.equals(story.getStage()) ? story.getTitle() : MINUS).setHeader("Open").setTextAlign(ColumnTextAlign.CENTER).setFooter(progressBar);
+        storyGrid.addColumn(story -> TODO.equals(story.getStage()) ? story.getTitle() : MINUS).setHeader("TODO").setTextAlign(ColumnTextAlign.CENTER).setFooter(progressBar);
+        storyGrid.addColumn(story -> IN_PROGRESS.equals(story.getStage()) ? story.getTitle() : MINUS).setHeader("In Progress").setTextAlign(ColumnTextAlign.CENTER).setFooter(progressBar);
+        storyGrid.addColumn(story -> DONE.equals(story.getStage()) ? story.getTitle() : MINUS).setHeader("Done").setTextAlign(ColumnTextAlign.CENTER).setFooter(progressBar);
+    }
+
+    private void updateList() {
+        storyGrid.setItems(storyService.findAll());
+        storyGrid.addThemeVariants();
     }
 }
