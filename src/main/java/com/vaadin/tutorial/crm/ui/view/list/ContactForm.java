@@ -37,6 +37,7 @@ public class ContactForm extends FormLayout {
     Button close = new Button("Cancel");
 
     Binder<Employee> binder = new BeanValidationBinder<>(Employee.class);
+
     private Employee employee;
 
     public ContactForm(List<Department> departments) {

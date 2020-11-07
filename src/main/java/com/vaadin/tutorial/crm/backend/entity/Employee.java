@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -53,4 +54,7 @@ public class Employee implements Cloneable {
     @NotNull
     @NotEmpty
     private String email;
+
+    @OneToOne(mappedBy = "employee")
+    private Story story;
 }

@@ -1,59 +1,54 @@
 package com.vaadin.tutorial.crm.backend.service;
 
-import com.vaadin.tutorial.crm.backend.entity.Employee;
 import com.vaadin.tutorial.crm.backend.entity.Department;
+import com.vaadin.tutorial.crm.backend.entity.Employee;
 import com.vaadin.tutorial.crm.backend.enums.Role;
 import com.vaadin.tutorial.crm.backend.enums.Status;
 import com.vaadin.tutorial.crm.backend.repository.CompanyRepository;
-import com.vaadin.tutorial.crm.backend.repository.ContactRepository;
+import com.vaadin.tutorial.crm.backend.repository.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
-public class ContactService {
-    private static final Logger LOGGER = Logger.getLogger(ContactService.class.getName());
-    private ContactRepository contactRepository;
-    private CompanyRepository companyRepository;
-
-    public ContactService(ContactRepository contactRepository,
-                          CompanyRepository companyRepository) {
-        this.contactRepository = contactRepository;
-        this.companyRepository = companyRepository;
-    }
+@RequiredArgsConstructor(onConstructor =@__(@Autowired))
+public class EmployeeService {
+    private final EmployeeRepository employeeRepository;
+    private final CompanyRepository companyRepository;
 
     public List<Employee> findAll() {
-        return contactRepository.findAll();
+        return employeeRepository.findAll();
     }
 
     public long count() {
-        return contactRepository.count();
+        return employeeRepository.count();
     }
 
     public void delete(Employee employee) {
-        contactRepository.delete(employee);
+        employeeRepository.delete(employee);
     }
 
     public void save(Employee employee) {
         if (employee == null) {
-            LOGGER.log(Level.SEVERE,
-                    "Contact is null. Are you sure you have connected your form to the application?");
+            log.debug("Contact is null. Are you sure you have connected your form to the application?");
             return;
         }
-        contactRepository.save(employee);
+        employeeRepository.save(employee);
     }
 
     public List<Employee> findAll(String stringFilter) {
         if (stringFilter == null || stringFilter.isEmpty()) {
-            return contactRepository.findAll();
+            return employeeRepository.findAll();
         } else {
-            return contactRepository.search(stringFilter);
+            return employeeRepository.search(stringFilter);
         }
     }
 
@@ -66,10 +61,10 @@ public class ContactService {
                             .collect(Collectors.toList()));
         }
 
-        if (contactRepository.count() == 0) {
+        if (employeeRepository.count() == 0) {
             Random r = new Random(0);
             List<Department> companies = companyRepository.findAll();
-            contactRepository.saveAll(
+            employeeRepository.saveAll(
                     Stream.of("Gabrielle Gabrielle Patel", "Brian Brian Robinson", "Eduardo Eduardo Haugen",
                             "Koen Koen Johansen", "Alejandro Alejandro Macdonald", "Angel Angel Karlsson", "Yahir Yahir Gustavsson", "Haiden Haiden Svensson",
                             "Emily Emily Stewart", "Corinne Corinne Davis", "Ryann Ryann Davis", "Yurem Yurem Jackson", "Kelly Kelly Gustavsson",
