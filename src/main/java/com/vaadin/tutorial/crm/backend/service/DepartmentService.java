@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class CompanyService {
+public class DepartmentService {
 
     private CompanyRepository companyRepository;
 
-    public CompanyService(CompanyRepository companyRepository) {
+    public DepartmentService(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
 

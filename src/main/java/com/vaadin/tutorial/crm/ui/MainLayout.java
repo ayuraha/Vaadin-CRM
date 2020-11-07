@@ -13,6 +13,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.tutorial.crm.ui.view.dashboard.DashboardView;
 import com.vaadin.tutorial.crm.ui.view.list.ListView;
+import com.vaadin.tutorial.crm.ui.view.list.StoryListView;
 
 @CssImport("./styles/shared-styles.css")
 @PWA(
@@ -52,6 +53,11 @@ public class MainLayout extends AppLayout {
         addToDrawer(new VerticalLayout(
                 listLink,
                 new RouterLink("Dashboard", DashboardView.class)
+        ));
+
+        addToDrawer(new VerticalLayout(
+                listLink,
+                new RouterLink("Story list", StoryListView.class)
         ));
     }
 }
